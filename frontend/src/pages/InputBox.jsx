@@ -53,7 +53,6 @@ const InputBox = () => {
                   </button>
                 </div>
               </div>
-
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Number of Questions
@@ -72,7 +71,6 @@ const InputBox = () => {
                 </div>
               </div>
             </div>
-
             <button className="w-full bg-accent bg-cyan-500 text-white py-4 rounded-lg text-lg font-semibold transition-colors">
               <FontAwesomeIcon icon={faWandMagicSparkles} className="mr-2" />
               Generate Quiz

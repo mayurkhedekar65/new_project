@@ -1,10 +1,22 @@
-import React from "react";
+import React,{useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain } from "@fortawesome/free-solid-svg-icons";
+import {useNavigate} from "react-router-dom"
+import Loader from "./Loader";
 
 const NavBar = () => {
+   const navigate = useNavigate();
+    const [loading, setloadervalue] = useState(false);
+    const activateLoader = () => {
+      setloadervalue(true);
+      setTimeout(() => {
+        setloadervalue(false);
+        navigate("/signin");
+      }, 1500);
+    };
   return (
-    <>
+    <> 
+      {loading && <Loader/>}
       <header
         id="header"
         className="bg-white shadow-sm border-b border-gray-200"
@@ -25,7 +37,7 @@ const NavBar = () => {
             <span className="text-gray-600 hover:text-primary transition-colors cursor-pointer">
               About
             </span>
-            <button className="px-4 py-2 text-primary border border-primary rounded-lg bg-primary  transition-all">
+            <button className="px-4 py-2 text-primary border border-primary rounded-lg bg-primary  transition-all" onClick={activateLoader}>
               Sign In
             </button>
             <button className="px-4 py-2 bg-primary text-white rounded-lg bg-blue-700 transition-colors">
