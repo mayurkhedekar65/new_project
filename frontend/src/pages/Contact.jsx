@@ -34,23 +34,32 @@ const Contact = () => {
           <div className="bg-white pt-12 pb-10 pr-8 pl-8 rounded-2xl">
             <form action="#" className="text-center">
               <div>
+              <div className="text-left mb-2">
+              <label htmlFor="name" className="capitalize text-gray-700 text-[15px]">your name*</label>
+              </div>
                 <input
-                  className="border  border-gray-500 w-80 h-12 mb-10 rounded-xl pl-5 placeholder:capitalize"
+                  className="border  border-gray-500 w-80 h-12 mb-6 rounded-xl pl-5 placeholder:capitalize placeholder:text-[14px]"
                   type="text"
-                  placeholder="your name"
+                  placeholder="enter your name"
                 />
               </div>
               <div>
+                <div className="text-left mb-2">
+              <label htmlFor="email" className="capitalize text-gray-700 text-[15px]">your email*</label>
+              </div>
                 <input
-                  className="border  border-gray-500 w-80 h-12 mb-10 rounded-xl pl-5 placeholder:capitalize"
+                  className="border  border-gray-500 w-80 h-12 mb-6 rounded-xl pl-5 placeholder:capitalize placeholder:text-[14px]"
                   type="email"
-                  placeholder="your email"
+                  placeholder="enter your email"
                 />
               </div>
               <div>
+                 <div className="text-left mb-2">
+              <label htmlFor="message" className="capitalize text-gray-700 text-[15px]">your message*</label>
+              </div>
                 <textarea
-                  className="mb-10 w-80 h-35 p-4 border  border-gray-500 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none placeholder:capitalize "
-                  placeholder="your message"
+                  className="mb-10 w-80 h-35 p-4 border  border-gray-500 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none placeholder:capitalize placeholder:text-[14px]"
+                  placeholder="enter your message"
                 ></textarea>
               </div>
               <div>

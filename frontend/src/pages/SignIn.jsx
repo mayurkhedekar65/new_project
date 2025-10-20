@@ -18,22 +18,28 @@ const SignIn = () => {
       {loading && <Loader/>}
       <main className="bg-gradient-to-br from-primary via-blue-600 to-accent grid place-items-center h-screen border">
         <div className=" bg-white text-center  pt-10 pb-10 pr-8 pl-8 rounded-2xl">
-          <h3 className="capitalize text-[28px] mb-10 text-black font-bold">
+          <h3 className="capitalize text-[28px] mb-5 text-black font-bold">
             sign in
           </h3>
           <form action="#" className="text-center">
             <div>
+              <div className="text-left mb-2">
+              <label htmlFor="username" className="capitalize text-gray-700 text-[15px]">username*</label>
+              </div>
               <input
-                className="border  border-gray-500 w-80 h-12 mb-10 rounded-xl pl-5 placeholder:capitalize"
+                className="border  border-gray-500 w-80 h-12 mb-6 rounded-xl pl-5 placeholder:capitalize placeholder:text-[14px]"
                 type="text"
-                placeholder="username"
+                placeholder="enter the username"
               />
             </div>
             <div>
+               <div className="text-left mb-2">
+              <label htmlFor="password" className="capitalize text-gray-700 text-[15px]">password*</label>
+              </div>
               <input
-                className="border border-gray-500 w-80 h-12 mb-10 rounded-xl pl-5 placeholder:capitalize"
+                className="border border-gray-500 w-80 h-12 mb-10 rounded-xl pl-5 placeholder:capitalize placeholder:text-[14px]"
                 type="password"
-                placeholder="password"
+                placeholder="enter the password"
               />
             </div>
             <div>
