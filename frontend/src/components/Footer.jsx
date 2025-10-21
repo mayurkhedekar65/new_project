@@ -33,8 +33,6 @@ const Footer = () => {
               <div className="flex items-center space-x-3 mb-4">
                 
                   <img className="md:h-8 h-7" src={image} alt="" />
-     
-                {/* <h3 className="md:text-lg font-bold">AI Quiz Generator</h3> */}
               </div>
               <p className="text-gray-400 text-sm">
                 Create engaging quizzes instantly with the power of artificial
@@ -57,8 +55,8 @@ const Footer = () => {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>© 2024 AI Quiz Generator. All rights reserved.</p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400 capitalize">
+            <p>© 2025 quizize<span className="lowercase">.ai</span> All rights reserved.</p>
           </div>
         </div>
       </footer>

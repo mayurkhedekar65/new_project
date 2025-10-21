@@ -19,7 +19,7 @@ const Contact = () => {
             <div className="space-y-5 text-[17px] md:text-[18px]">
               <div className="flex items-center space-x-3">
                 <FontAwesomeIcon icon={faEnvelope} className="text-white text-xl" />
-                <span>support@aiquizgen.com</span>
+                <span>support@quizizeai.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <FontAwesomeIcon icon={faPhone} className="text-white text-xl" />

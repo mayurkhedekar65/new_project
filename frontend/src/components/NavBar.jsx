@@ -30,9 +30,6 @@ const NavBar = () => {
             <button onClick={() => navigate("/")}>
               <div className="rounded-lg flex items-center justify-around gap-2 hover:opacity-70">
                 <img className="md:h-10  h-8" src={image} alt="" />
-                 {/* <h1 className="text-[15px] md:text-xl font-bold text-gray-900 uppercase">
-                  Quizify
-              </h1> */}
               </div>
             </button>
           </div>
