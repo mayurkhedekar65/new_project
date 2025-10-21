@@ -12,7 +12,7 @@ const About = () => {
         </h1>
         <p className="flex-wrap text-[17px] md:text-lg text-white max-w-3xl text-center leading-relaxed ">
           The{" "}
-          <span className="font-semibold text-[#FE9D1B] capitalize">
+          <span className="font-semibold text-white capitalize">
             quizize<span className="text-[#FE9D1B] lowercase">.ai</span>{" "}
           </span>
           is an intelligent platform that allows users to effortlessly create
