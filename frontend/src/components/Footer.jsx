@@ -1,7 +1,8 @@
 import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import image from "../assets/ChatGPT Image Oct 20, 2025, 05_36_34 PM.png";
+import image from "../assets/ChatGPT Image Oct 21, 2025, 06_18_51 PM-Photoroom.png";
+
 
 
 const Footer = () => {
@@ -31,7 +32,7 @@ const Footer = () => {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 
-                  <img className="md:h-10 md:w-20 h-8 w-16" src={image} alt="" />
+                  <img className="md:h-8 h-7" src={image} alt="" />
      
                 {/* <h3 className="md:text-lg font-bold">AI Quiz Generator</h3> */}
               </div>

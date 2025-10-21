@@ -7,13 +7,13 @@ const About = () => {
     <>
       <NavBar></NavBar>
       <div className="bg-gradient-to-br from-primary  to-accent via-blue-700 min-h-screen flex flex-col items-center justify-center px-6 pt-15 md:py-12">
-        <h1 className="md:text-4xl text-3xl font-bold text-white mb-6 text-center">
-          About AI Quiz Generator
+        <h1 className="md:text-4xl text-3xl font-bold text-white mb-6 text-center capitalize">
+          About quizize<span className="text-[#FE9D1B] lowercase">.ai</span>
         </h1>
         <p className="flex-wrap text-[17px] md:text-lg text-white max-w-3xl text-center leading-relaxed ">
           The{" "}
-          <span className="font-semibold text-[#FE9D1B]">
-            AI Quiz Generator{" "}
+          <span className="font-semibold text-[#FE9D1B] capitalize">
+            quizize<span className="text-[#FE9D1B] lowercase">.ai</span>{" "}
           </span>
           is an intelligent platform that allows users to effortlessly create
           quizzes on any topic using the power of Artificial Intelligence. By

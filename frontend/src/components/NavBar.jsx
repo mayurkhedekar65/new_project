@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain, faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import image from "../assets/ChatGPT Image Oct 20, 2025, 05_36_34 PM.png";
+import image from "../assets/ChatGPT Image Oct 21, 2025, 06_18_51 PM-Photoroom.png";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const NavBar = () => {
           <div className="flex items-center space-x-2">
             <button onClick={() => navigate("/")}>
               <div className="rounded-lg flex items-center justify-around gap-2 hover:opacity-70">
-                <img className="md:h-10 md:w-20 h-8 w-16" src={image} alt="" />
+                <img className="md:h-10  h-8" src={image} alt="" />
                  {/* <h1 className="text-[15px] md:text-xl font-bold text-gray-900 uppercase">
                   Quizify
               </h1> */}
@@ -52,18 +52,18 @@ const NavBar = () => {
                 : "hidden"
             } md:flex md:space-x-8 md:static md:flex-row md:justify-center md:items-center md:space-y-0 md:bg-transparent md:shadow-none`}
           >
-            <span
-              className="hover:text-gray-400 hover:text-primary text-white cursor-pointer transition-colors"
+            <button
+              className="hover:text-gray-400 hover:text-primary text-white cursor-pointer transition-colors "
               onClick={() => activateLoader("/contact")}
             >
               Contact
-            </span>
-            <span
+            </button>
+            <button
               className="hover:text-gray-400 hover:text-primary text-white cursor-pointer transition-colors"
               onClick={() => activateLoader("/about")}
             >
               About
-            </span>
+            </button>
             <button
               className="px-41 py-2 md:px-4 md:py-2 bg-cyan-500 border border-white text-white rounded-lg hover:bg-primary hover:border hover:bg-white hover:rounded-lg hover:border-blue-700  hover:text-blue-700 transition-all"
               onClick={() => activateLoader("/signin")}
