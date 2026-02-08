@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from rest_framework.permissons import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
+from models import Customer
+from serializer import CustomerRegistrationFormSerializer
 # Create your views here.
 
 
@@ -14,7 +16,7 @@ class UserRegistrationForm(APIView):
     permission_classes[AllowAny]
 
     def post(self, request, format=None):
-        serializer=UserRegistrationFormSerializer(data=request.data)
+        serializer=CustomerRegistrationFormSerializer(data=request.data)
         if serializer.is_valid():
             customer_name = request.data.get('name')
             customer_email = request.data.get('email')
@@ -27,7 +29,7 @@ class UserRegistrationForm(APIView):
             user.set_password(customer_password)
             user.save()
             
-            customer.objects.create(customer=user,name=customer_name,email=customer_email)
+            Customer.objects.create(customer=user,name=customer_name,email=customer_email)
             
             return Response({"message":"user successfully register"})
         
@@ -45,7 +47,7 @@ class UserLogin(APIView):
             user=authenticate(username=user_obj.username,password=customer_password)
             if user is not None:
                 try: 
-                    is_customer=customer.objects.filter(email=customer_email).exists()
+                    is_customer=Customer.objects.filter(email=customer_email).exists()
                     if not is_customer:
                         Response({"message","user profile not found!"},status=status.HTTP_403_FORBIDDEN)
                     refresh=RefreshToken.for_user(user)
