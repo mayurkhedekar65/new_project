@@ -16,14 +16,18 @@ const InputBox = () => {
     text_data: "",
   });
   const [quizData, setQuizData] = useState(null || []);
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setTextData({ ...textData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!textData) {
+
+    if (!textData.text_data) {
       alert("please enter the text !");
     } else {
+      setLoading(true);
       try {
         const response = await axios.post(
           `http://127.0.0.1:8000/generate_quiz/`,
@@ -33,6 +37,7 @@ const InputBox = () => {
         setTextData({
           text_data: "",
         });
+        setLoading(false);
         alert("form submitted");
       } catch {
         console.error("failed to generate quiz's");
@@ -118,9 +123,30 @@ const InputBox = () => {
                 </div>
               </div>
             </div> */}
-              <button className="hover:bg-white hover:border-cyan-500 hover:border  hover:rounded-lg  hover:text-cyan-500 w-full  bg-accent border border-cyan-500 bg-cyan-500 text-white py-2 rounded-lg md:text-[17px] text-[16px] font-semibold transition-colors">
-                <FontAwesomeIcon icon={faWandMagicSparkles} className="mr-2" />
-                Generate Quiz
+              <button
+                className={`w-full py-2 rounded-lg md:text-[17px] text-[16px] font-semibold transition-colors text-white
+                border border-cyan-500
+                ${
+                loading
+                ? "bg-cyan-400 cursor-not-allowed"
+                 : "bg-cyan-500 hover:bg-white hover:text-cyan-500 hover:border hover:rounded-lg"
+                 }
+               `}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin text-white"></span>
+                    Generating...
+                  </span>
+                ) : (
+                  <>
+                    <FontAwesomeIcon
+                      icon={faWandMagicSparkles}
+                      className="mr-2"
+                    />
+                    Generate Quiz
+                  </>
+                )}
               </button>
             </form>
             <QuizDisplay questions={quizData} />
