@@ -71,10 +71,10 @@ const SignIn = () => {
               <div>
                 <div className="text-left mb-2">
                   <label
-                    htmlFor="username"
+                    htmlFor="email"
                     className="capitalize text-gray-700 md:text-[15px] text-[14px]"
                   >
-                    username*
+                    email*
                   </label>
                 </div>
                 <input
@@ -83,7 +83,7 @@ const SignIn = () => {
                   value={formData.customer_email}
                   onChange={handleChange}
                   type="text"
-                  placeholder="enter the username"
+                  placeholder="enter the email"
                 />
               </div>
               <div>

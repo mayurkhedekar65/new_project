@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_groq import ChatGroq
 import json
 from dotenv import load_dotenv
 import os
 from prompt.system_prompt import llm_prompt
+from schemas.requestSchema import TextRequest
+
 
 app = FastAPI()
 
@@ -27,14 +28,12 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 
-class TextRequest(BaseModel):
-    text: str
-
-
 @app.get("/generate_quiz")
 async def generate_quiz(request: TextRequest):
     os.environ["GROQ_API_KEY"] = GROQ_API_KEY
     user_input_text = request.text
+    questions_count= request.num_of_questions
+  
 
     llm_model = ChatGroq(
         model="qwen/qwen3-32b",
@@ -54,7 +53,7 @@ async def generate_quiz(request: TextRequest):
         ("human",
          f"""
         {user_input_text} 
-        Generate 20 MCQs from the above paragraph. 
+        Generate {questions_count} MCQs from the above paragraph. 
         Give the response in a dictionary format with key-value pairs. 
         Provide options as option 1, option 2, etc., and 
         give the correct_answer as the value, not as an option. 

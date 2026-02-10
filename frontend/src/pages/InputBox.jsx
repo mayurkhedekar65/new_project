@@ -11,13 +11,14 @@ import axios from "axios";
 import QuizDisplay from "../components/QuizDisplay";
 
 const InputBox = () => {
-  const [textData, setTextData] = useState({ text_data: "" });
+  const [textData, setTextData] = useState({ text_data: "" ,num_of_questions:""});
   const [quizData, setQuizData] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [selectedText, setSelectedText] = useState("");
   const [viewMode, setViewMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,15 +45,18 @@ const InputBox = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("access_token");
     if (!token) {
       alert("please login to generate a quiz");
-    } else {
+    }
+     else {
       if (!textData.text_data) {
         alert("please enter the text !");
         return;
       }
-
+      if(!textData.num_of_questions){
+        alert("please select the quiz count !")
+        return
+      }
       setLoading(true);
       try {
         const response = await axios.post(
@@ -75,7 +79,7 @@ const InputBox = () => {
         setSelectedQuiz(newQuizItem.generated_quiz);
         setSelectedText(textData.text_data);
         setViewMode(true);
-        setTextData({ text_data: "" });
+        setTextData({ text_data: "",num_of_questions:"" });
         alert("quiz generated successfully");
       } catch (error) {
         console.error("failed to generate quiz's", error);
@@ -86,18 +90,20 @@ const InputBox = () => {
 
   return (
     <>
-      <NavBar></NavBar>
-      <motion.button
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        viewport={{ once: true, amount: 0.3 }}
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-24 left-4 z-50 bg-primary text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
-      >
-        <FontAwesomeIcon icon={faListCheck} />
-        Your Texts
-      </motion.button>
+      {/* <NavBar></NavBar> */}
+      {!sidebarOpen && token && (
+        <motion.button
+          initial={{ scale: 0.8, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true, amount: 0.3 }}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="fixed top-10 left-4 z-50 bg-primary text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
+        >
+          <FontAwesomeIcon icon={faListCheck} />
+          Your Texts
+        </motion.button>
+      )}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40"
@@ -111,8 +117,8 @@ const InputBox = () => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-5 flex justify-between items-center border-b border-white/20">
-          <h2 className="text-xl font-bold"></h2>
+        <div className="p-5 flex justify-between items-center border-b bg-cyan-500 border-white/20">
+          <h2 className="text-xl font-bold capitalize">history</h2>
           <button onClick={() => setSidebarOpen(false)}>✕</button>
         </div>
 
@@ -120,7 +126,7 @@ const InputBox = () => {
           {quizData.map((item) => (
             <div
               key={item.id}
-              className="bg-cyan-500 text-primary rounded-lg p-3 cursor-pointer hover:scale-[1.02] transition"
+              className="bg-gradient-to-l from-gray-900 via-gray-800 to-gray-900 text-gray-200 rounded-lg p-3 cursor-pointer hover:scale-[1.02] transition"
               onClick={() => {
                 setSelectedText(item.user_input);
 
@@ -140,7 +146,7 @@ const InputBox = () => {
         </div>
       </div>
 
-      <section className="py-16 bg-gradient-to-br from-primary to-accent via-blue-700 pt-35">
+      <section className="bg-gradient-to-br from-primary to-accent via-blue-700 py-35 ">
         <div className={`max-w-4xl mx-auto px-3 ${sidebarOpen ? "ml-80" : ""}`}>
           {viewMode && (
             <button
@@ -192,6 +198,24 @@ const InputBox = () => {
                       placeholder="Type a topic like 'World War II' or paste your text content here..."
                     ></textarea>
                   </div>
+                  <div>
+                    <select
+                      className="border bg-white border-gray-300 md:text-[14px] text-[13px] w-75 h-10 md:w-37 md:h-10 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[10px] text-gray-700"
+                      name="num_of_questions"
+                      id=""
+                      onChange={handleChange}
+                      value={textData.num_of_questions}
+                    >
+                      {" "}
+                      <option className="capitalize text-gray-700" value="" disabled> 
+                       Select Quiz Count
+                      </option>
+                      <option value="5">5 Questions</option>
+                      <option value="10">10 Questions</option>
+                      <option value="15">15 Questions</option>
+                      <option value="20">20 Questions</option>
+                    </select>
+                  </div>
                   <button
                     type="submit"
                     className={`w-full py-2 rounded-lg md:text-[17px] text-[16px] font-semibold transition-colors text-white
@@ -225,9 +249,9 @@ const InputBox = () => {
 
           {viewMode && (
             <div className="space-y-6">
-              <div className="bg-gray-200 text-cyan-500 p-6 rounded-xl shadow">
+              <div className="bg-gradient-to-l from-gray-900 via-gray-700 to-gray-900 text-cyan-500 p-6 rounded-xl shadow">
                 <h3 className="font-bold text-lg mb-3">Your Text</h3>
-                <p className="whitespace-pre-line text-gray-700">
+                <p className="whitespace-pre-line text-gray-200">
                   {selectedText}
                 </p>
               </div>
@@ -238,7 +262,7 @@ const InputBox = () => {
         </div>
       </section>
 
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
     </>
   );
 };

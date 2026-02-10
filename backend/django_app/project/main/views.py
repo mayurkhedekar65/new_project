@@ -14,6 +14,7 @@ import requests
 def generate_quiz(request):
     user_instance=User.objects.get(id=request.user.id)
     user_input_data=request.data.get("text_data")
-    response = requests.get("http://127.0.0.1:8001/generate_quiz", json={"text": user_input_data})
+    num_of_questions=request.data.get("num_of_questions")
+    response = requests.get("http://127.0.0.1:8001/generate_quiz", json={"text": user_input_data,"num_of_questions":num_of_questions})
     LLMResponse.objects.create(user=user_instance,user_input=user_input_data,llm_response=response.json())
     return JsonResponse(response.json(), safe=False)

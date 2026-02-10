@@ -75,7 +75,7 @@ class UserLogin(APIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_data(request):
-    user_data=LLMResponse.objects.filter(user=request.user.id).values("id","user_input","llm_response")
+    user_data=LLMResponse.objects.filter(user=request.user.id).order_by("-id").values("id","user_input","llm_response")
     return Response({"user_data":user_data})
 
 
