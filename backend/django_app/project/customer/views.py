@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
 from customer.models import Customer,LLMResponse
 from customer.serializer import CustomerRegistrationFormSerializer
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode , urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from common.email import send_email
@@ -113,7 +113,7 @@ def reset_password(request):
     If you did not request this, please ignore this email.
 
     Best regards,
-    SHG Bazar Support Team
+    quizize Support Team
     """
     
     try:
@@ -122,3 +122,45 @@ def reset_password(request):
         print(f"Reset email failed: {str(e)}")
 
     return Response({"message": "Reset link generated and sent to your email."})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def set_new_password(request):
+    uid = request.data.get('uid')
+    token = request.data.get('token')
+    new_pass = request.data.get('new_password')
+
+    if not uid or not token or not new_pass:
+        return Response({"message": "uid, token and new_password are required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user_id = urlsafe_base64_decode(uid).decode()
+        user = User.objects.get (id = user_id)
+    except:
+        return Response({"message": "invalid uid"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if PasswordResetTokenGenerator().check_token(user, token):
+        user.set_password(new_pass)
+        user.save()
+        
+        default_email = "contact@quizize.ai"
+        mail_sub = "Your Password Has Been Changed"
+        confirm_message = f"""
+        Hello {user.username},
+
+        This is a confirmation that the password for your account has been successfully changed.
+
+        If you did not perform this action, please contact our support team immediately.
+
+        Best regards,
+        quizize Support Team
+        """
+        try:
+            send_email(request, default_email, user.email, confirm_message, mail_sub)
+        except Exception as e:
+            print(f"Confirmation email failed: {str(e)}")
+
+        return Response({"message": "password reset successfully."})
+    else:
+        return Response({"message": "Invalid or expired token.."}, status=status.HTTP_400_BAD_REQUEST)
