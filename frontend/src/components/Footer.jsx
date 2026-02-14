@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import image from "../assets/ChatGPT Image Oct 21, 2025, 06_18_51 PM-Photoroom.png";
+import image from "../assets/logo.png";
 import { motion } from "motion/react";
 
 const Footer = () => {

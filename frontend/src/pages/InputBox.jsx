@@ -54,8 +54,12 @@ const InputBox = () => {
     }
     else {
       if (!textData.text_data && !textData.file) {
-        alert("please enter the text or a pdf/doc file !");
+        alert("please enter the text or select a pdf/doc file !");
         return;
+      }
+      if(textData.text_data && textData.file){
+        alert("please either enter the text or select a pdf/doc file !");
+        return; 
       }
       if (!textData.num_of_questions) {
         alert("please select the quiz count !")
@@ -84,13 +88,13 @@ const InputBox = () => {
 
           const newQuizItem = {
             id: Date.now(),
-            user_input: textData.text_data,
-            generated_quiz: response.data.generated_quiz,
+            user_input: response.data.user_input,
+            generated_quiz: response.data.generated_quiz_data.generated_quiz,
           };
 
           setQuizData((prev) => [newQuizItem, ...prev]);
           setSelectedQuiz(newQuizItem.generated_quiz);
-          setSelectedText(textData.text_data);
+          setSelectedText(newQuizItem.user_input);
           setViewMode(true);
           setTextData({ text_data: "", num_of_questions: "", file: "" });
           alert("quiz generated successfully");
@@ -211,7 +215,7 @@ const InputBox = () => {
                       placeholder="Type a topic like 'World War II' or paste your text content here..."
                     ></textarea>
                   </div>
-                  <div>
+                  <div className="flex-col justify-start items-center gap-x-5">
                     <div>
                       <select
                         className="border bg-white border-gray-300 md:text-[14px] text-[13px] w-75 h-10 md:w-37 md:h-10 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[10px] text-gray-700"
@@ -231,7 +235,7 @@ const InputBox = () => {
                       </select>
                     </div>
                     <div>
-                      <input type="file" name="file" onChange={handleChange} />
+                      <input className="border-2 border-gray-300 placeholder:text-gray-300 px-2 py-2 rounded-xl text-[14px] mb-4" type="file" name="file" onChange={handleChange} />
                     </div>
                   </div>
                   <button

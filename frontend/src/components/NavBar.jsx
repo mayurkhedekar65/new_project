@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain, faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import image from "../assets/ChatGPT Image Oct 21, 2025, 06_18_51 PM-Photoroom.png";
+import image from "../assets/logo.png";
 import { motion } from "framer-motion";
 import axios from "axios";
 
