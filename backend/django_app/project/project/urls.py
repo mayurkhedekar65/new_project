@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user_form/', include('customer.urls')),
     path('generate_quiz/',generate_quiz),
-    path('get_user_data/',include('customer.urls'))
+    path('get_user_data/',include('customer.urls')),
+    path('password/',include('customer.urls'))
 ]
 

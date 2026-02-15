@@ -100,7 +100,7 @@ def reset_password(request):
     
     uid = urlsafe_base64_encode(force_bytes(user.id))
     token = PasswordResetTokenGenerator().make_token(user)
-    default_email = "contact@quizize.ai"
+    default_email = "support@quizizeai.com"
     mail_sub = "Password Reset Link"
     
     message = f"""
@@ -108,14 +108,14 @@ def reset_password(request):
 
     You requested a password reset for your account. Click on the link below to set a new password:
 
-    http://127.0.0.1:5173/resetpassword/?uid={uid}&token={token}
+   http://localhost:5173/setnewpassword/?uid={uid}&token={token}
 
     If you did not request this, please ignore this email.
 
     Best regards,
     quizize Support Team
     """
-    
+    print(message)
     try:
         send_email(request, default_email, reset_email, message, mail_sub)
     except Exception as e:
@@ -129,7 +129,8 @@ def reset_password(request):
 def set_new_password(request):
     uid = request.data.get('uid')
     token = request.data.get('token')
-    new_pass = request.data.get('new_password')
+    new_pass = request.data.get('newpassword')
+
 
     if not uid or not token or not new_pass:
         return Response({"message": "uid, token and new_password are required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -144,7 +145,7 @@ def set_new_password(request):
         user.set_password(new_pass)
         user.save()
         
-        default_email = "contact@quizize.ai"
+        default_email = "support@quizizeai.com"
         mail_sub = "Your Password Has Been Changed"
         confirm_message = f"""
         Hello {user.username},
