@@ -39,8 +39,10 @@ const SignUp = () => {
           password: "",
         });
         setConfirmPassword("");
-        alert(response.data.message);
+        navigate("/signin")
+        alert("user registered successfully.");
       } catch {
+        console.error("failed to signup");
         alert("failed to signup");
       }
       setSubmitLoading(false);

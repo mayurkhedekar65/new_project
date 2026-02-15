@@ -60,16 +60,16 @@ const ForgotPassword = () => {
         <div className="bg-gradient-to-br from-primary  to-accent via-blue-700 min-h-screen flex items-center justify-center px-4">
           <div className="relative w-full max-w-md bg-white rounded-xl p-8 shadow-sm border border-gray-200">
             <div className="flex flex-col items-center mb-6">
-              <h2 className="text-2xl font-bold text-black">
+              <h2 className="md:text-[28px] text-[26px] font-bold text-black">
                 Forgot Password
               </h2>
-              <p className="text-sm text-gray-500 mt-1 text-center">
+              <p className="md:text-[15px] text-[14px] text-gray-500 mt-1 text-center">
                 Enter your email to receive reset instructions
               </p>
             </div>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="md:text-[15px] text-[14px] text-gray-700">
                   Email Address*
                 </label>
                 <input
@@ -104,7 +104,7 @@ const ForgotPassword = () => {
                   )}
                 </button>
             </form>
-            <div className="flex justify-center items-center gap-x-1.5">
+            <div className="flex justify-center items-center gap-x-1.5 text-[15px]">
               <p
                 onClick={showSignIn}
                 className="text-center text-[15px] text-gray-600 mt-6"
