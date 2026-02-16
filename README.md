@@ -109,9 +109,9 @@ FastAPI runs on http://127.0.0.1:8001
 #### 5. Configuration
 
 Environment Variables
+#### Django
 
 `Inside settings.py `
-#### Django
 
 ```bash
 
