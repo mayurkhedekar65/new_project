@@ -60,6 +60,15 @@ The frontend will run on http://localhost:5173
 
 ```bash
 cd backend/django_app
+
+# create environment
+python -m venv env
+
+# Windows
+env\Scripts\activate
+
+# macOS / Linux
+source env/bin/activate
 pip install -r requirements.txt
 
 # Run migrations
@@ -77,6 +86,15 @@ Django runs on http://127.0.0.1:8000
 ```bash
 cd backend/fastapi_app
 
+# create environment
+python -m venv env
+
+# Windows
+env\Scripts\activate
+
+# macOS / Linux
+source env/bin/activate
+
 # Create .env file
 echo "GROQ_API_KEY=your_groq_api_key_here" > .env
 
@@ -91,6 +109,7 @@ FastAPI runs on http://127.0.0.1:8001
 #### 5. Configuration
 
 Environment Variables
+
 `Inside settings.py `
 #### Django
 
