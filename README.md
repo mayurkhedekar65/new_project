@@ -42,7 +42,7 @@ An intelligent application that uses AI to automatically generate multiple-choic
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Abhiraj05/new_project.git
+git clone https://github.com/Abhiraj05/Quizize.ai-AI-Powered-Quiz-Generation-Platform.git
 cd new_project
 ```
 
