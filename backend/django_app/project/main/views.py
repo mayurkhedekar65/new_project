@@ -1,7 +1,6 @@
 import os
 import uuid
-from django.shortcuts import render
-from django.http import HttpResponse
+import requests
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
@@ -9,11 +8,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from customer.models import LLMResponse
 from django.contrib.auth.models import User
-import requests
 from markitdown import MarkItDown
 from common.email import send_email
 
 
+# extracts the text from pdf,doc and returns a plan text
 def file_text_extract(file):
     temp_path = None
     text = None
@@ -36,6 +35,7 @@ def file_text_extract(file):
     return text
 
 
+# sends request to fastapi server , creates a new llm response entry in the table & returns the llm response in json format
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def generate_quiz(request):
@@ -46,20 +46,21 @@ def generate_quiz(request):
     if user_input_data:
         response = requests.get("http://127.0.0.1:8001/generate_quiz", json={
                                 "text": user_input_data, "num_of_questions": num_of_questions})
-        quiz=LLMResponse.objects.create(
+        quiz = LLMResponse.objects.create(
             user=user_instance, user_input=user_input_data, llm_response=response.json())
-        return JsonResponse({"id":quiz.id,"user_input": user_input_data, "generated_quiz_data": response.json()}, safe=False)
+        return JsonResponse({"id": quiz.id, "user_input": user_input_data, "generated_quiz_data": response.json()}, safe=False)
     else:
         text = file_text_extract(file)
         if not text:
             return JsonResponse({"error": "Failed to extract text"}, status=400)
         response = requests.get("http://127.0.0.1:8001/generate_quiz",
                                 json={"text": text, "num_of_questions": num_of_questions})
-        quiz=LLMResponse.objects.create(
+        quiz = LLMResponse.objects.create(
             user=user_instance, user_input=text, llm_response=response.json())
-        return JsonResponse({"id":quiz.id,"user_input": text, "generated_quiz_data": response.json()}, safe=False)
+        return JsonResponse({"id": quiz.id, "user_input": text, "generated_quiz_data": response.json()}, safe=False)
 
 
+# sends the feedback email to the admin
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def submit_feedback_form(request):
