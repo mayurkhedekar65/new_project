@@ -10,6 +10,7 @@ const SetNewPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newPasssword || !confirmPassword) {

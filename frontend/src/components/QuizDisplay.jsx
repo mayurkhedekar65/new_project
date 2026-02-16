@@ -5,6 +5,7 @@ import { faCopy, faCheck } from "@fortawesome/free-solid-svg-icons";
 const QuizDisplay = ({ quiz }) => {
   const [copied, setCopied] = useState(false);
 
+  // check if the array is empty or not
   if (!quiz || !Array.isArray(quiz) || quiz.length === 0) {
     return (
       <div className="bg-gradient-to-l from-gray-900 via-gray-700 to-gray-900 p-6 rounded-xl shadow-lg">
@@ -15,6 +16,7 @@ const QuizDisplay = ({ quiz }) => {
     );
   }
 
+  // generate a quiz text to be copied
   const generateQuizText = () => {
     return quiz
       .map((q, index) => {
@@ -30,6 +32,7 @@ const QuizDisplay = ({ quiz }) => {
       .join("\n");
   };
 
+  // copy's a quiz text on clipboard
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(generateQuizText());

@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
 import Home from "./pages/Home"
 import InputBox from "./pages/InputBox";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ForgotPassword from "./pages/ForgotPassword";
 import SetNewPassword from "./pages/SetNewPassword";
 import Profile from "./components/Profile";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
 

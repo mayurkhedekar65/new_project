@@ -16,10 +16,12 @@ const SignUp = () => {
     password: "",
   });
 
+  // handles the value change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.customer_email || !formData.password) {
@@ -39,7 +41,7 @@ const SignUp = () => {
           password: "",
         });
         setConfirmPassword("");
-        navigate("/signin")
+        navigate("/signin");
         alert("user registered successfully.");
       } catch {
         console.error("failed to signup");
@@ -153,7 +155,6 @@ const SignUp = () => {
                          ? "bg-cyan-400 cursor-not-allowed text-white border-cyan-400"
                          : "bg-cyan-500 text-white hover:bg-white hover:text-cyan-500 hover:border-cyan-500"
                      }`}
-
                 >
                   {submitLoading ? (
                     <>

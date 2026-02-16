@@ -19,10 +19,12 @@ const Contact = () => {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
 
+  // handles the value change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
@@ -39,11 +41,11 @@ const Contact = () => {
           "http://127.0.0.1:8000/user_feedback/",
           formData,
         );
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-      });
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+        });
         alert("feedback submitted");
       } catch {
         console.error("failed to submit");

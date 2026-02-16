@@ -22,12 +22,15 @@ const NavBar = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
+  // clears the access token
   const logout = () => {
     localStorage.clear();
     setLoggedIn(false);
     alert("Logged out successfully");
     navigate("/");
   };
+
+  // fetches the user profile data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,6 +51,7 @@ const NavBar = () => {
     fetchData();
   }, []);
 
+  // opens the profile popup
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -127,27 +131,27 @@ const NavBar = () => {
                   </button>
 
                   {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-44  bg-gray-800 rounded-lg shadow-lg border z-50">
+                    <div className="absolute right-0 mt-2 w-44  bg-white rounded-lg shadow-lg z-50">
                       <button
                         onClick={() => {
                           activateLoader("/profile");
                           setProfileOpen(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-900  hover:rounded-t-lg"
+                        className="w-full text-left px-4 py-2 hover:bg-gray-200  hover:rounded-t-lg"
                       >
                         <FontAwesomeIcon
                           icon={faUser}
                           className="text-cyan-500"
                         />
-                        <span className="text-white"> Go to Profile</span>
+                        <span className="text-cyan-500"> Go to Profile</span>
                       </button>
 
                       <button
                         onClick={logout}
-                        className="w-full text-left px-4 py-2 text-cyan-500 hover:bg-gray-900 hover:rounded-b-lg"
+                        className="w-full text-left px-4 py-2 text-[#FE9D1B] hover:bg-gray-200 hover:rounded-b-lg"
                       >
                         <FontAwesomeIcon icon={faSignOutAlt} />
-                        <span className="text-white"> Logout</span>
+                        <span className="text-[#FE9D1B]"> Logout</span>
                       </button>
                     </div>
                   )}

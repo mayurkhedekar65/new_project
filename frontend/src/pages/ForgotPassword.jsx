@@ -11,7 +11,6 @@ const ForgotPassword = () => {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
 
-
   const showSignIn = () => {
     setLoading(true);
     setTimeout(() => {
@@ -28,9 +27,12 @@ const ForgotPassword = () => {
     }, 1500);
   };
 
+  // handles the value change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email) {
@@ -48,7 +50,7 @@ const ForgotPassword = () => {
         });
       } catch {
         console.error("error in submitting form");
-        alert("email not found")
+        alert("email not found");
       }
       setSubmitLoading(false);
     }
@@ -83,26 +85,25 @@ const ForgotPassword = () => {
               </div>
 
               <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={submitLoading}
-                 className={`font-semibold capitalize border pt-2 pb-2 w-96 mx-auto rounded-xl text-[17px] transition flex items-center justify-center gap-2
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitLoading}
+                className={`font-semibold capitalize border pt-2 pb-2 w-96 mx-auto rounded-xl text-[17px] transition flex items-center justify-center gap-2
                    ${
                      submitLoading
                        ? "bg-cyan-400 cursor-not-allowed text-white border-cyan-400"
                        : "bg-cyan-500 text-white hover:bg-white hover:text-cyan-500 hover:border-cyan-500"
                    }`}
-
-                >
-                  {submitLoading ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                      Sending the link...
-                    </>
-                  ) : (
-                    "send the link"
-                  )}
-                </button>
+              >
+                {submitLoading ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    Sending the link...
+                  </>
+                ) : (
+                  "send the link"
+                )}
+              </button>
             </form>
             <div className="flex justify-center items-center gap-x-1.5 text-[15px]">
               <p
