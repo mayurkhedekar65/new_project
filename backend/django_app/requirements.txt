@@ -3,3 +3,6 @@ django-cors-headers
 django
 psycopg2-binary  
 requests 
+djangorestframework-simplejwt
+PyJWT
+markitdown[all]

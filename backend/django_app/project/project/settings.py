@@ -113,25 +113,15 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'user',      # database name
-        'USER': 'postgres',          # username
-        'PASSWORD': '123456',        # password
+        'NAME': '',      # database name
+        'USER': '',          # username
+        'PASSWORD': '',        # password
         'HOST': 'localhost',         # host
         'PORT': '5432',              # PostgreSQL default port
     }
 }
 
-# postgres sql
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'Mydb',      # database name
-#         'USER': 'postgres',          # username
-#         'PASSWORD': 'Pr@M@y32635',        # password
-#         'HOST': 'localhost',         # host
-#         'PORT': '5432',              # PostgreSQL default port
-#     }
-# }
+
 
 
 # Password validation
@@ -192,5 +182,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mydjango65@gmail.com'
-EMAIL_HOST_PASSWORD = 'oxxy jmoe gpau pqcp' 
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = '' 

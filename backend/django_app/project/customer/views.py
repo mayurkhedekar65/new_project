@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,9 +12,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from common.email import send_email
-# Create your views here.
 
 
+# registers the new user
 class UserRegistrationForm(APIView):
     permission_classes = [AllowAny]
 
@@ -44,6 +43,7 @@ class UserRegistrationForm(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# authenticate & logins the user
 class UserLogin(APIView):
     permission_classes = []
 
@@ -76,6 +76,7 @@ class UserLogin(APIView):
             return Response({"message": "user not registerd"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# fetches the  quiz data of the user from database
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_data(request):
@@ -84,13 +85,16 @@ def get_user_data(request):
     return Response({"user_data": user_data})
 
 
+# fetches the profile data of the user from database
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_username(request):
-    username = User.objects.filter(id=request.user.id).values("username")
-    return Response({"username": username})
+    userdata = User.objects.filter(
+        id=request.user.id).values("username", "email")
+    return Response({"userdata": userdata})
 
 
+# generates the reset link email & sends it to user
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def reset_password(request):
@@ -125,6 +129,7 @@ def reset_password(request):
     return Response({"message": "Reset link generated and sent to your email."})
 
 
+# sets the new password in database
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def set_new_password(request):
@@ -168,6 +173,7 @@ def set_new_password(request):
         return Response({"message": "Invalid or expired token.."}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# deletes the particular quiz from database
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_quiz(request, quiz_id):

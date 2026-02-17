@@ -1,6 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBrain, faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faSignOutAlt,
+  faBars,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import image from "../assets/logo.png";
@@ -14,32 +19,48 @@ const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
 
+  // clears the access token
   const logout = () => {
     localStorage.clear();
     setLoggedIn(false);
     alert("Logged out successfully");
     navigate("/");
   };
+
+  // fetches the user profile data
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/get_user_data/get_username/",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/get_user_data/get_username/",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
           },
-        },
-      );
-      setUserName(response.data["username"][0]);
-      setLoggedIn(true)
-    } catch (error) {
-      console.error("failed to fetch username", error);
-    }
-  };
-  fetchData();
-},[])
+        );
+        setUserName(response.data.userdata[0]["username"]);
+        setLoggedIn(true);
+      } catch (error) {
+        console.error("failed to fetch username", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // opens the profile popup
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const activateLoader = (path) => {
     setLoaderValue(true);
@@ -48,7 +69,7 @@ const NavBar = () => {
       setLoaderValue(false);
       setDisplayValue(true);
       navigate(path);
-      setMenuOpen(false); 
+      setMenuOpen(false);
     }, 1500);
   };
 
@@ -64,7 +85,6 @@ const NavBar = () => {
           viewport={{ once: true }}
           className="bg-gradient from-primary to-accent shadow-sm fixed top-0 left-0 w-full z-50"
         >
- 
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <button onClick={() => navigate("/")}>
@@ -101,30 +121,59 @@ const NavBar = () => {
               >
                 About
               </button>
-              {loggedIn && (<><button
-                className="px-34 py-2 md:px-4 md:py-2 bg-cyan-500 border border-white text-white rounded-lg hover:bg-primary hover:border hover:bg-white hover:rounded-lg hover:border-blue-700  hover:text-blue-700 transition-all"
-                
-              >
-                {userName.username.split('@',1)}
-              </button>
-              <button
-                className="px-40 py-2 md:px-4 md:py-2 bg-blue-700 text-white rounded-lg hover:border hover:text-cyan-500 hover:bg-white hover:border-cyan-500 hover:rounded-lg hover-border-black border transition-all"
-                onClick={logout}
-              >
-                Logout
-              </button></>)}
-              {!loggedIn && (<><button
-                className="px-41 py-2 md:px-4 md:py-2 bg-cyan-500 border border-white text-white rounded-lg hover:bg-primary hover:border hover:bg-white hover:rounded-lg hover:border-blue-700  hover:text-blue-700 transition-all"
-                onClick={() => activateLoader("/signin")}
-              >
-                Sign In
-              </button>
-              <button
-                className="px-40 py-2 md:px-4 md:py-2 bg-blue-700 text-white rounded-lg hover:border hover:text-cyan-500 hover:bg-white hover:border-cyan-500 hover:rounded-lg hover-border-black border transition-all"
-                onClick={() => activateLoader("/signup")}
-              >
-                Sign Up
-              </button></>)}
+              {loggedIn && (
+                <div className="relative" ref={profileRef}>
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="px-4 py-2 bg-cyan-500 border border-white text-white rounded-lg hover:bg-white hover:text-cyan-500 hover:border-cyan-500 transition-all"
+                  >
+                    {userName?.split("@", 1)}
+                  </button>
+
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-2 w-44  bg-white rounded-lg shadow-lg z-50">
+                      <button
+                        onClick={() => {
+                          activateLoader("/profile");
+                          setProfileOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-200  hover:rounded-t-lg"
+                      >
+                        <FontAwesomeIcon
+                          icon={faUser}
+                          className="text-cyan-500"
+                        />
+                        <span className="text-cyan-500"> Go to Profile</span>
+                      </button>
+
+                      <button
+                        onClick={logout}
+                        className="w-full text-left px-4 py-2 text-[#FE9D1B] hover:bg-gray-200 hover:rounded-b-lg"
+                      >
+                        <FontAwesomeIcon icon={faSignOutAlt} />
+                        <span className="text-[#FE9D1B]"> Logout</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!loggedIn && (
+                <>
+                  <button
+                    className="px-41 py-2 md:px-4 md:py-2 bg-cyan-500 border border-white text-white rounded-lg hover:bg-primary hover:border hover:bg-white hover:rounded-lg hover:border-blue-700  hover:text-blue-700 transition-all"
+                    onClick={() => activateLoader("/signin")}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    className="px-40 py-2 md:px-4 md:py-2 bg-blue-700 text-white rounded-lg hover:border hover:text-cyan-500 hover:bg-white hover:border-cyan-500 hover:rounded-lg hover-border-black border transition-all"
+                    onClick={() => activateLoader("/signup")}
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
             </nav>
           </div>
         </motion.header>

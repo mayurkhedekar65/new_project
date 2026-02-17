@@ -1,2 +1,3 @@
-"fastapi[standard]"
--qU langchain-groq
+fastapi[standard]
+langchain-groq
+

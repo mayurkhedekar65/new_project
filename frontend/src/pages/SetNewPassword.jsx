@@ -10,6 +10,7 @@ const SetNewPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newPasssword || !confirmPassword) {
@@ -44,13 +45,13 @@ const SetNewPassword = () => {
       <div className="bg-gradient-to-br from-primary  to-accent via-blue-700  min-h-screen flex items-center justify-center px-4">
         <div className="relative w-full max-w-md bg-white rounded-xl p-8 shadow-sm border border-gray-200">
           <div className="flex flex-col items-center mb-6">
-            <h2 className="text-2xl font-bold text-black">
+            <h2 className="md:text-[28px] text-[26px] font-bold text-black">
               Reset The Password
             </h2>
           </div>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-sm capitalize font-medium text-gray-700">
+              <label className="md:text-[15px] text-[14px] capitalize  text-gray-700">
                 new password*
               </label>
               <div className="relative">
@@ -72,7 +73,7 @@ const SetNewPassword = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm capitalize font-medium text-gray-700">
+              <label className="md:text-[15px] text-[14px] capitalize  text-gray-700">
                 confirm password*
               </label>
               <div className="relative">

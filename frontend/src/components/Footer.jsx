@@ -67,7 +67,7 @@ const Footer = () => {
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400 capitalize">
             <p>
-              © 2025 quizize<span className="lowercase">.ai</span> All rights
+              © 2026 quizize<span className="lowercase">.ai</span> All rights
               reserved.
             </p>
           </div>

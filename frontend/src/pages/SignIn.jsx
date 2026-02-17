@@ -14,10 +14,12 @@ const SignIn = () => {
     password: "",
   });
 
+  // handles the value change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.customer_email || !formData.password) {
@@ -40,10 +42,9 @@ const SignIn = () => {
         alert("login successful");
       } catch {
         console.error("failed to signin");
-        alert("failed to signin")
+        alert("failed to signin");
       }
       setSubmitLoading(false);
-
     }
   };
   const activateLoader = () => {
@@ -54,7 +55,7 @@ const SignIn = () => {
     }, 1500);
   };
 
-    const showResetPassword = () => {
+  const showResetPassword = () => {
     setloadervalue(true);
     setTimeout(() => {
       setloadervalue(false);
@@ -128,13 +129,12 @@ const SignIn = () => {
                   type="button"
                   onClick={handleSubmit}
                   disabled={submitLoading}
-                 className={`font-semibold capitalize border pt-2 pb-2 w-72 mx-auto rounded-xl text-[17px] transition flex items-center justify-center gap-2
+                  className={`font-semibold capitalize border pt-2 pb-2 w-72 mx-auto rounded-xl text-[17px] transition flex items-center justify-center gap-2
                    ${
                      submitLoading
                        ? "bg-cyan-400 cursor-not-allowed text-white border-cyan-400"
                        : "bg-cyan-500 text-white hover:bg-white hover:text-cyan-500 hover:border-cyan-500"
                    }`}
-
                 >
                   {submitLoading ? (
                     <>
@@ -160,20 +160,20 @@ const SignIn = () => {
                   </button>
                 </div>
               </div>
-               <div className="flex justify-center items-center gap-2 capitalize mt-3 text-[15px]">
-                  <div className="text-[#333333]">
-                    <p>forgot password?</p>
-                  </div>
-                  <div>
-                    <button
-                      type="button"
-                      className="capitalize text-blue-500 hover:underline hover:text-cyan-500"
-                      onClick={showResetPassword}
-                    >
-                      reset password
-                    </button>
-                  </div>
+              <div className="flex justify-center items-center gap-2 capitalize mt-3 text-[15px]">
+                <div className="text-[#333333]">
+                  <p>forgot password?</p>
                 </div>
+                <div>
+                  <button
+                    type="button"
+                    className="capitalize text-blue-600 hover:underline hover:text-cyan-500"
+                    onClick={showResetPassword}
+                  >
+                    reset password
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
         </motion.div>

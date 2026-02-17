@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faListCheck,
@@ -25,6 +23,7 @@ const InputBox = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const token = localStorage.getItem("access_token");
 
+  // delete's the specific quiz based on it's id
   const deleteQuiz = async (id) => {
     try {
       const response = await axios.post(
@@ -44,6 +43,7 @@ const InputBox = () => {
     }
   };
 
+  // fetches the user quiz data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,6 +63,7 @@ const InputBox = () => {
     fetchData();
   }, []);
 
+  // handles the change as text type or file type
   const handleChange = (e) => {
     if (e.target.name === "file") {
       setTextData({ ...textData, file: e.target.files[0] });
@@ -71,6 +72,7 @@ const InputBox = () => {
     }
   };
 
+  // handles the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!token) {
@@ -136,7 +138,6 @@ const InputBox = () => {
 
   return (
     <>
-      {/* <NavBar></NavBar> */}
       {!sidebarOpen && token && (
         <motion.button
           initial={{ scale: 0.8, opacity: 0 }}
@@ -276,7 +277,6 @@ const InputBox = () => {
                         <option value="5">5 Questions</option>
                         <option value="10">10 Questions</option>
                         <option value="15">15 Questions</option>
-                        <option value="20">20 Questions</option>
                       </select>
                     </div>
                     <div>
@@ -333,8 +333,6 @@ const InputBox = () => {
           )}
         </div>
       </section>
-
-      {/* <Footer></Footer> */}
     </>
   );
 };
