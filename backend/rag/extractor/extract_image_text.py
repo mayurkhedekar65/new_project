@@ -1,22 +1,14 @@
-from dotenv import load_dotenv
-import requests
+import easyocr
+import numpy as np
+from PIL import Image
 
-load_dotenv()
+reader = easyocr.Reader(["en"])
 
-# extract text from image using ocr api
+# extract text from image using ocr
 def extract_image_text(file_path):
-    with open(file_path, "rb") as f:
-        response = requests.post(
-            "https://api.ocr.space/parse/image",
-            files={"file": f},
-            data={
-                "apikey": "API_KEY",
-                "language": "eng"
-            }
-        )
-
-    result = response.json()
-    if result.get("OCRExitCode") != 1:
-        raise Exception(result.get("ErrorMessage", "OCR failed"))
-
-    return result["ParsedResults"][0]["ParsedText"]
+    image = Image.open(file_path).convert("RGB")
+    image = np.array(image)
+    results = reader.readtext(image)
+    text = "\n".join(result[1].strip() for result in results if result[1].strip())
+    return text
+    

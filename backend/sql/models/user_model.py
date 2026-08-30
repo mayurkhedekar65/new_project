@@ -21,7 +21,7 @@ class User(Base):
     )
 
     report_comparisons = Relationship(
-        "Comparison",
+        "ReportComparison",
         back_populates="user",
         cascade="all, delete"
     )

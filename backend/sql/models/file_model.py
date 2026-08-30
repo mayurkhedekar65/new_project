@@ -16,7 +16,8 @@ class UploadedFile(Base):
 
     user_id = Column(
         Integer,
-        ForeignKey("users.id"),
+        ForeignKey("users.id",
+                   ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -40,16 +41,15 @@ class UploadedFile(Base):
         "User",
         back_populates="uploaded_files"
     )
-    
+
     report = Relationship(
         "ReportDetails",
         back_populates="uploaded_files",
         cascade="all, delete"
     )
-    
+
     chats = Relationship(
         "Chats",
         back_populates="uploaded_files",
         cascade="all, delete"
     )
-

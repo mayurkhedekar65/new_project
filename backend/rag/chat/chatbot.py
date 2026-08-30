@@ -1,21 +1,27 @@
+import os
+from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough, RunnableParallel
-from langchain_core.output_parsers import StrOutputParser
 from rag.schemas.chatbot_schema import ChatResponse
 from rag.schemas.report_output_schema import ReportValuesResponse
-from rag.schemas.summary_output_schema import SummaryOutput
+from rag.schemas.summary_output_schema import ReportSummaryOutput
+from rag.schemas.comparison_summary_output_schema import ReportComparisonOutput
 from rag.vector.vector_store import create_or_get_vector_db
 
-model = ChatGoogleGenerativeAI(model="gemini-3-flash-preview")
+load_dotenv()
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+
+model = ChatGoogleGenerativeAI(model="gemini-3-flash-preview",temperature=0)
 structured_model1 = model.with_structured_output(ReportValuesResponse)
-structured_model2 = model.with_structured_output(SummaryOutput)
+structured_model2 = model.with_structured_output(ReportSummaryOutput)
 structured_model3 = model.with_structured_output(ChatResponse)
+structured_model4 = model.with_structured_output(ReportComparisonOutput)
+
 
 # extracts the report values from the document
-def extract_report_values(report_text):
-    parser = StrOutputParser()
-
+async def extract_report_values(report_text):
     prompt = PromptTemplate(
         template="""
     You are a medical report information extraction assistant.
@@ -23,7 +29,7 @@ def extract_report_values(report_text):
     Extract the laboratory values from the given medical report text.
 
     Report Text:
-    {report_text}
+    {report_data}
 
     Extract the following parameters:
     - Hemoglobin
@@ -51,10 +57,10 @@ def extract_report_values(report_text):
     - Do not provide explanations.
     - Do not summarize the report.
     """,
-        input_variables=["report_text"]
+        input_variables=["report_data"]
     )
-    final_chain = prompt | structured_model1 | parser
-    response = final_chain.invoke({"report_data": report_text})
+    final_chain = prompt | structured_model1
+    response = await final_chain.ainvoke({"report_data": report_text})
 
     if not response:
         return None
@@ -63,11 +69,9 @@ def extract_report_values(report_text):
 
 
 # generates summary based on report values
-def generate_summary(report_dict):
-    parser = StrOutputParser()
-
+async def generate_summary(report_dict):
     prompt = PromptTemplate(
-        template="""
+    template="""
     You are an experienced medical report analysis assistant.
 
     The following is a patient's blood test report as a Python dictionary.
@@ -75,59 +79,62 @@ def generate_summary(report_dict):
     Blood Test Report:
     {report_data}
 
-    Your task is to analyze every parameter in the report.
+    Analyze the available blood test results and provide a concise, patient-friendly interpretation.
 
-    For each parameter:
-    1. Mention the parameter name and its value.
-    2. Explain what the parameter measures.
-    3. State whether the value is Normal, Low, High, or Borderline using standard adult reference ranges.
-    4. If the value is abnormal:
-    - Explain the possible causes.
-    - Describe the potential health risks.
-    - Suggest precautions and lifestyle changes.
-    - Recommend foods that may help improve the value.
-    - Mention when the patient should consult a healthcare professional.
-    5. If the value is normal:
-    - State that it is within the normal range.
-    - Suggest how to maintain healthy levels.
+    Your response must contain the following:
 
-    After analyzing all parameters, provide:
+    1. Summary
+    Provide a concise overall summary of the blood report. Mention whether the available results are generally reassuring and highlight the most important concern if one exists.
 
-    ## Overall Health Summary
-    - Summarize the patient's overall health based on the report.
+    2. Overall Summary
+    Provide a slightly more detailed interpretation of the overall report. Do not repeat every laboratory value because the values are already displayed separately.
 
-    ## Key Findings
-    - List any abnormal or borderline values in order of importance.
+    3. Key Findings
+    List only the most important findings from the report.
+    Focus on abnormal, borderline, or clinically relevant results.
+    Do not list every normal result.
+    If all available results are within typical reference ranges, state that the available results are generally within the expected range.
 
-    ## Diet Recommendations
-    - Recommend foods to include and foods to limit.
+    4. Recommendations
+    Provide practical and patient-friendly recommendations based on the findings.
+    Include relevant diet and lifestyle recommendations.
+    Do not prescribe medications or specific supplement doses.
+    Do not give recommendations that are unrelated to the patient's findings.
 
-    ## Lifestyle Recommendations
-    - Exercise
-    - Sleep
-    - Hydration
-    - Stress management
-
-    ## Precautions
-    - Mention any precautions the patient should take.
-
-    ## Follow-up Tests
-    - Suggest additional tests only if they may be useful based on abnormal findings.
+    5. Follow-up
+    Suggest important follow-up actions or tests only when appropriate based on the findings.
+    If no specific follow-up is needed, return an empty list.
 
     Guidelines:
+    - Analyze all available parameters before generating the summary.
+    - Use standard adult reference ranges as general guidance, while recognizing that laboratory reference ranges may vary.
     - Use simple, patient-friendly language.
     - Be accurate and evidence-based.
     - Do not make a definitive diagnosis.
     - Do not prescribe medications.
-    - If all values are normal, clearly mention that the report is generally healthy and provide preventive health advice.
-    - If a value is missing or null, state that it was not available for analysis.
+    - Do not invent missing values.
+    - If a value is null or unavailable, do not interpret it.
+    - Avoid unnecessary repetition of laboratory values.
+    - Do not provide a separate explanation of what every test measures.
+    - Do not overstate risks or causes.
+    - Recommendations should be appropriate to the specific findings.
+    - If there is an abnormal result, recommend discussing it with a healthcare professional when appropriate.
 
-    Respond using Markdown with clear headings and bullet points.
+    Formatting:
+    - Return the content as plain text.
+    - Do not use Markdown.
+    - Do not use #, *, -, bullets, numbered lists, or other Markdown formatting.
+    - Use simple headings and sentences.
+    - Do not use Markdown formatting inside any field.
+    - Each item in key_findings, recommendations, and follow_up should be a plain-text sentence without bullet characters.
+
+    Return only the requested structured output.
+
     """,
-        input_variables=["report_data"],
+    input_variables=["report_data"],
     )
-    final_chain = prompt | structured_model2 | parser
-    response = final_chain.invoke({"report_data": report_dict})
+    final_chain = prompt | structured_model2 
+    response = await final_chain.ainvoke({"report_data": report_dict})
 
     if not response:
         return None
@@ -142,9 +149,8 @@ def join_text(retrieved_docs):
 
 
 # answers the user query based on context
-def answer_user_query(user_id, file_id, user_message, chat_history):
+async def answer_user_query(user_id, file_id, user_message, chat_history):
     vector_db = create_or_get_vector_db()
-    parser = StrOutputParser()
     retriever = vector_db.as_retriever(
         search_type="similarity",
         search_kwargs={"k": 5},
@@ -181,20 +187,25 @@ def answer_user_query(user_id, file_id, user_message, chat_history):
     - If the required information is not present in the context, reply:
     "I don't know based on the provided medical report."
 
-    Answer in a clear, patient-friendly manner using headings and bullet points where appropriate.
+    Answer in a clear, patient-friendly manner.
+    
+    Return the summary as plain text:
+    - Do not use Markdown.
+    - Do not use #, *, -, or other Markdown formatting.
+    - Use simple headings and sentences.
     """,
         input_variables=["context", "question", "chat_history"],
     )
 
     parallel_chain = RunnableParallel({
-        "context": retriever | RunnableLambda(join_text),
+        "context":  RunnableLambda(lambda x: x["question"])| retriever | RunnableLambda(join_text),
         "question": RunnablePassthrough(),
         "chat_history": RunnableLambda(lambda x: x["chat_history"])
     })
 
-    final_chain = parallel_chain | prompt | structured_model3 | parser
+    final_chain = parallel_chain | prompt | structured_model3 
 
-    response = final_chain.invoke({
+    response = await final_chain.ainvoke({
         "question": user_message,
         "chat_history": chat_history
     })
@@ -202,133 +213,87 @@ def answer_user_query(user_id, file_id, user_message, chat_history):
     if not response:
         return None
     else:
-        return response
+        return response.ai
 
 
 # generates summary based on comparison of two report values
-def generate_comparison_summary(old_report_data, recent_report_data):
-    parser = StrOutputParser()
+async def generate_comparison_summary(old_report_data, recent_report_data):
     prompt = PromptTemplate(
-        template="""
+    template="""
     You are an experienced medical report analysis assistant specializing in comparing laboratory reports over time.
 
-    The patient has provided two blood test reports:
+    The patient has provided two blood test reports.
 
-    ## Previous Blood Test Report:
+    Previous Blood Test Report:
     {old_report_data}
 
-    ## Recent Blood Test Report:
+    Recent Blood Test Report:
     {recent_report_data}
 
-    Your task is to analyze and compare both reports.
+    Compare the previous and recent reports and identify the most important changes.
 
-    For every parameter available in either report:
+    Your response must contain the following:
 
-    1. Mention:
-    - Parameter name
-    - Previous value
-    - Recent value
-    - Difference/change between the two values
+    1. Overall Summary
+    Provide a concise summary of the overall changes between the previous and recent reports.
+    Mention whether the overall health indicators appear to be improving, stable, or worsening.
+    Highlight the most significant positive or concerning changes.
 
-    2. Explain:
-    - What the parameter measures.
-    - Whether the recent value is Normal, Low, High, or Borderline using standard adult reference ranges.
-
-    3. Analyze the trend:
-    - Improved compared to the previous report.
-    - Worsened compared to the previous report.
-    - Remained stable.
-    - New abnormal finding.
-    - Previously abnormal value that has improved or normalized.
-
-    4. If the recent value is abnormal or borderline:
-    - Explain possible reasons for the change.
-    - Describe potential health risks if the condition persists.
-    - Suggest precautions and lifestyle modifications.
-    - Recommend foods that may help improve the value.
-    - Mention when the patient should consult a healthcare professional.
-
-    5. If the recent value is normal:
-    - State that it is within the normal range.
-    - Explain whether it has improved, declined, or remained stable.
-    - Suggest ways to maintain healthy levels.
-
-    6. If a parameter exists only in one report:
-    - Mention that comparison is not possible.
-    - Analyze the available value separately.
-
-    7. If a value is missing, null, or unavailable:
-    - Clearly mention that the parameter could not be analyzed.
-
-    After analyzing all parameters, provide the following sections:
-
-    # Overall Health Comparison Summary
-    - Summarize the patient's health status based on changes between the old and recent reports.
-    - Mention major improvements.
-    - Mention areas that need attention.
-    - Describe whether overall health indicators are improving, declining, or stable.
-
-    # Progress Report
-    Create a summary of:
-    - Parameters that improved.
-    - Parameters that worsened.
-    - Parameters that remained unchanged.
-    - New abnormalities detected.
-
-    # Key Findings
-    List important findings in order of medical significance:
-    - Critical abnormalities.
-    - Borderline values.
-    - Positive improvements.
-
-    # Parameter-wise Comparison Table
-    Create a Markdown table with:
-    | Parameter | Previous Value | Recent Value | Change | Current Status | Trend |
-
-    # Diet Recommendations
-    Based on the comparison:
-    - Foods to include.
-    - Foods to limit or avoid.
-    - Nutritional suggestions for improving abnormal values.
-
-    # Lifestyle Recommendations
+    2. Key Changes
+    List only the important changes between the two reports.
     Include:
-    - Exercise recommendations.
-    - Sleep recommendations.
-    - Hydration.
-    - Stress management.
-    - Other healthy habits.
+    Improved results.
+    Worsened results.
+    Previously abnormal results that have improved or returned to the expected range.
+    New abnormal findings.
+    Important stable findings when clinically relevant.
 
-    # Precautions
-    Mention:
-    - Things the patient should monitor.
-    - Any symptoms that should not be ignored.
-    - Situations where medical consultation is recommended.
+    Do not list every parameter.
+    Do not repeat changes that are already clearly shown in the comparison table.
+    Do not include minor numerical changes unless they are medically relevant.
 
-    # Follow-up Tests
-    Suggest additional tests only if they may be useful based on:
-    - Newly abnormal findings.
-    - Persistent abnormalities.
-    - Worsening trends.
+    3. Recommendations
+    Provide practical recommendations based on the important changes.
+    Include relevant diet and lifestyle recommendations when appropriate.
+    Focus on maintaining improvements and addressing concerning trends.
+    Do not prescribe medications or specific supplement doses.
+
+    4. Follow-up
+    Suggest follow-up actions or tests only when appropriate.
+    Consider persistent abnormalities, worsening trends, newly abnormal findings, or previously abnormal results that require monitoring.
+    If no specific follow-up is needed, return an empty list.
 
     Guidelines:
-    - Use simple patient-friendly language.
-    - Compare trends clearly rather than only analyzing individual values.
-    - Be accurate and evidence-based.
-    - Do not provide a definitive diagnosis.
-    - Do not prescribe medications.
-    - Consider standard adult reference ranges.
-    - Clearly mention that laboratory ranges may vary by lab.
-    - If the recent report is generally healthy, mention that the patient is maintaining good health and provide preventive advice.
-    - Avoid alarming language; explain findings in a balanced manner.
+    Analyze all available parameters before generating the comparison summary.
+    Use standard adult reference ranges as general guidance.
+    Laboratory reference ranges may vary between laboratories.
+    Focus on trends and clinically meaningful changes rather than small numerical differences.
+    If a parameter exists only in one report, do not treat the absence of the previous value as a worsening or improvement.
+    If a value is missing, null, or unavailable, do not make assumptions about it.
+    Do not invent values or medical history.
+    Use simple, patient-friendly language.
+    Be accurate and evidence-based.
+    Do not make a definitive diagnosis.
+    Do not prescribe medications.
+    Avoid unnecessary repetition of laboratory values.
+    Avoid alarming language and explain findings in a balanced manner.
+    If the latest report is generally reassuring, clearly state that and provide appropriate preventive advice.
 
-    Respond using Markdown with clear headings, bullet points, and comparison tables.
+    Formatting:
+    Return the content as plain text.
+    Do not use Markdown.
+    Do not use #, *, -, bullets, numbered lists, or other Markdown formatting.
+    Do not include a parameter-wise comparison table.
+    Do not include individual parameter explanations unless they are necessary to explain an important change.
+    Each item in key_changes, recommendations, and follow_up must be a plain-text sentence without bullet characters.
+
+    Return only the requested structured output.
     """,
-        input_variables=["old_report_data", "recent_report_data"],
+    input_variables=["old_report_data", "recent_report_data"],
     )
 
-    final_chain = prompt | structured_model2 | parser
-    response = final_chain.invoke({
+    final_chain = prompt | structured_model4 
+    response = await final_chain.ainvoke({
         "old_report_data": old_report_data,
         "recent_report_data": recent_report_data})
 

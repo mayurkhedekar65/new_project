@@ -1,8 +1,8 @@
-from random import randint
+import secrets
 
-# generates otp
+# generates otp of 4 digits
 def generate_otp():
-    random_num = str(randint(0000, 9999))
+    random_num = str(secrets.randbelow(9000)+(1000))
     return random_num
 
 

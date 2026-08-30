@@ -3,3 +3,5 @@ __pycache__/
 .env
 *.env
 backend/.env
+backend/uploads
+backend/new_chroma_db

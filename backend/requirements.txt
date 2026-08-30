@@ -13,3 +13,7 @@ redis[hiredis]
 langchain-community
 asyncpg 
 langchain-experimental
+alembic 
+bcrypt==4.0.1
+pypdf 
+easyocr   

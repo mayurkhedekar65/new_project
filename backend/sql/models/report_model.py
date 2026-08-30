@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Float, Text, ForeignKey
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Relationship
 from db.db_connection import Base
 
@@ -10,12 +11,16 @@ class ReportDetails(Base):
     id = Column(Integer, primary_key=True, index=True)
     file_id = Column(
         Integer,
-        ForeignKey("uploaded_files.id"),
+        ForeignKey("uploaded_files.id",
+                   ondelete="CASCADE"),
         nullable=False,
         unique=True
     )
     extracted_text = Column(Text, nullable=True)
-    summary_text = Column(Text, nullable=True)
+    summary = Column(Text, nullable=True)
+    key_findings = Column(JSONB, nullable=True)
+    recommendations = Column(JSONB, nullable=True)
+    follow_up = Column(JSONB, nullable=True)
     hemoglobin = Column(Float, nullable=True)
     wbc_count = Column(Float, nullable=True)
     platelet_count = Column(Float, nullable=True)

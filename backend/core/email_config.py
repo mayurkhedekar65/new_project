@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # mail base settings
 class Settings(BaseSettings):
@@ -8,7 +8,9 @@ class Settings(BaseSettings):
     MAIL_PORT: int
     MAIL_SERVER: str
 
-    # class Config:
-    #     env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
 settings = Settings()

@@ -1,12 +1,19 @@
 "use client";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    const user_name = localStorage.getItem("user_name");
+    setName(user_name);
+  }, []);
 
   const links = [
-    { name: "Document Chat", href: "/pdf-chat", icon: "description" },
+    { name: "Document Chat", href: "/document-chat", icon: "description" },
     { name: "Report Comparison", href: "/comparison", icon: "compare_arrows" },
     { name: "Report Analysis", href: "/report-analysis", icon: "analytics" },
     { name: "Profile Settings", href: "/settings", icon: "settings" },
@@ -14,7 +21,6 @@ export default function Sidebar() {
 
   return (
     <aside className="bg-slate-950 h-screen w-72 flex-col fixed left-0 top-0 border-r border-slate-800 hidden lg:flex z-50 text-white">
-      {/* Sidebar Header */}
       <div className="p-8 h-20 flex flex-col justify-center border-b border-slate-800/50">
         <h1 className="text-2xl font-black tracking-tight">
           <Link href="/">
@@ -22,8 +28,6 @@ export default function Sidebar() {
           </Link>
         </h1>
       </div>
-
-      {/* Navigation Links */}
       <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         {links.map((link) => {
           const isActive = pathname === link.href;
@@ -53,16 +57,13 @@ export default function Sidebar() {
         <span className="material-symbols-outlined">arrow_back</span>
         Back to Home
       </Link>
-      {/* Sidebar Footer */}
       <div className="p-6 border-t border-slate-800 bg-slate-950/50">
         <div className="flex items-center gap-3 px-2">
-          <img
-            alt="J"
-            className="w-11 h-11 rounded-full object-cover border-2 border-slate-800"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBztv2IJU4-1cntPgmqXxcoULrNsCkFU7LloDY-58Wjs-TgA2grO1U-qKpi3pneiauxT2G-SfVAz8946CLXu1EPM_iX9tqSa88U0wl1exltuG1lzeyp6dS09_lwHiN-I-veyYY6wXCvUxi5Veg6PCyhuhJHbk4sYJqyS8HJ5G53FSkucSGe_y8hwjfETDOFD-GQogeSCOX58S_qntKO7jBArNeza1BOo3sVY2VrDXHHuiYvXLEngrXET1yE9ZBeecL387R_qnnf8pMz"
-          />
+          <div className="rounded-4xl border text-lg font-bold bg-cyan-400 text-background border-slate-400 px-2">
+            {name[0]}
+          </div>
           <div className="overflow-hidden">
-            <p className="font-bold text-base text-white truncate">John Doe</p>
+            <p className="font-bold text-base text-white truncate">{name}</p>
           </div>
         </div>
       </div>

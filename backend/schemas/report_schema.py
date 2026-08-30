@@ -3,8 +3,6 @@ from typing import Optional
 
 # report details schema
 class ReportDetailsSchema(BaseModel):
-    id:str = Field(description="report id")
-    file_id: int = Field(description="file id")
     hemoglobin: Optional[float] = Field(
         default=None,
         description="hemoglobin (Hb) level in g/dL"
